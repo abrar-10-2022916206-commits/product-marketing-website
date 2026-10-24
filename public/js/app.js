@@ -74,16 +74,15 @@
   // 1. Toast Notification System
   function showToast(message, type = 'info') {
     const toast = document.createElement('div');
-    toast.className = 'toast';
-    const icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : '✨';
-    toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
     toastContainer.appendChild(toast);
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(20px)';
-      toast.style.transition = 'all 0.3s ease';
-      setTimeout(() => toast.remove(), 300);
-    }, 3200);
+      toast.style.transform = 'translateY(10px)';
+      toast.style.transition = 'all 0.25s ease';
+      setTimeout(() => toast.remove(), 250);
+    }, 3000);
   }
 
   // 2. Load Cart from LocalStorage
@@ -300,7 +299,7 @@
               </button>
 
               <button class="btn-buy-now" data-id="${product.id}" title="Order this single product directly">
-                ⚡ Buy Now
+                Buy Now
               </button>
             </div>
           </div>
@@ -336,7 +335,7 @@
             <span class="qty-display" id="singleQtyDisplay">1</span>
             <button type="button" class="qty-btn" id="btnSingleQtyInc">+</button>
           </div>
-          <span id="singleModalTotalPrice" style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-left: auto;">
+          <span id="singleModalTotalPrice" style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-left: auto;">
             Total: $${Number(product.price).toFixed(2)}
           </span>
         </div>
@@ -424,7 +423,7 @@
               Add to Cart
             </button>
             <button class="btn-buy-now" id="btnQvBuyNow" style="flex: 1; padding: 12px;">
-              ⚡ Buy Now
+              Buy Now
             </button>
           </div>
         </div>
@@ -509,8 +508,8 @@
       const data = await res.json();
       if (!data.success || !data.order) {
         trackingResultArea.innerHTML = `
-          <div style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: var(--radius-sm); padding: 14px; color: #fecdd3; font-size: 0.88rem;">
-            ⚠️ No order found matching "<strong>${identifier}</strong>". Please check your reference code or registered phone number.
+          <div class="tracking-not-found">
+            No order found matching "<strong>${identifier}</strong>". Please check your reference code or registered phone number.
           </div>
         `;
         return;
@@ -540,21 +539,21 @@
         `;
       } else {
         stepperHtml = `
-          <div style="background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: var(--radius-sm); padding: 12px; color: #f87171; text-align: center; font-weight: 700; margin: 20px 0;">
+          <div class="tracking-cancelled-banner">
             This order has been Cancelled.
           </div>
         `;
       }
 
       trackingResultArea.innerHTML = `
-        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px; margin-bottom: 14px;">
+        <div class="tracking-result-card">
+          <div class="tracking-result-header">
             <div>
-              <span style="font-size: 0.78rem; color: var(--text-muted);">ORDER REF</span>
-              <h4 style="font-family: 'Space Grotesk', monospace; font-size: 1.2rem; color: #fff;">${order.orderNumber}</h4>
+              <span class="tracking-label">ORDER REF</span>
+              <h4 class="tracking-ref-code">${order.orderNumber}</h4>
             </div>
             <div>
-              <span style="background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.4); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.78rem; font-weight: 700;">
+              <span class="status-badge ${order.status}">
                 ${order.status}
               </span>
             </div>
@@ -562,24 +561,24 @@
 
           ${stepperHtml}
 
-          <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-top: 20px;">
+          <div class="tracking-info-grid">
             <p><strong>Customer:</strong> ${order.customerName} (${order.customerPhone})</p>
             <p><strong>Shipping Address:</strong> ${order.shippingAddress}</p>
             <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
             <p><strong>Order Placed:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
           </div>
 
-          <div style="margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
-            <strong style="font-size: 0.86rem; color: #fff;">Items:</strong>
-            <ul style="list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 6px;">
+          <div class="tracking-items-box">
+            <strong>Items:</strong>
+            <ul class="tracking-items-list">
               ${order.items.map(i => `
-                <li style="display: flex; justify-content: space-between; font-size: 0.84rem; color: var(--text-muted);">
+                <li>
                   <span>${i.title} &times; ${i.quantity}</span>
-                  <span style="color: #fff; font-weight: 600;">$${(i.price * i.quantity).toFixed(2)}</span>
+                  <span>$${(i.price * i.quantity).toFixed(2)}</span>
                 </li>
               `).join('')}
             </ul>
-            <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 1rem; color: #fff; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border-subtle);">
+            <div class="tracking-total-line">
               <span>Total Paid:</span>
               <span>$${Number(order.total).toFixed(2)}</span>
             </div>
