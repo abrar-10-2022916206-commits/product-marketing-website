@@ -114,3 +114,21 @@ npm run dev
 ## 🎟️ Demo Promo Codes
 - `MARKETING20` : 20% discount on cart subtotal
 - `WELCOME10`   : 10% discount on cart subtotal
+
+---
+
+## 🌐 Deploying to Render
+
+This repository includes a [`render.yaml`](render.yaml) blueprint ready for 1-click cloud deployment:
+
+1. Push your code to GitHub.
+2. Sign in to [Render](https://render.com) and click **New +** -> **Web Service**.
+3. Connect your GitHub repository.
+4. Render automatically configures:
+   - **Environment**: Node
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+5. *(Optional)* Add your **Environment Variables** in the Render Dashboard:
+   - `MONGODB_URI`: Your MongoDB Atlas cluster connection string.
+   - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`: For cloud media hosting.
+6. Click **Deploy Web Service** to get your live public `.onrender.com` URL!
