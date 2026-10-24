@@ -7,6 +7,12 @@ const { MongoClient, ObjectId } = require('mongodb');
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
+// Ensure reliable DNS resolution for MongoDB Atlas SRV connection strings
+const dns = require('dns');
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (_) {}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
